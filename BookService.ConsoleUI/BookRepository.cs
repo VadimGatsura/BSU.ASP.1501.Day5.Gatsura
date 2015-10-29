@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BookService.Model;
+using BookService.Services;
 
-namespace BookService.Services {
+namespace BookService.ConsoleUI {
     public class BookRepository : IRepository<Book> {
 
         private string FilePath { get; }
@@ -15,10 +16,9 @@ namespace BookService.Services {
 
         #region Public Methods
         public IEnumerable<Book> GetAllItems() {
-            if(!File.Exists(FilePath))
-                throw new FileNotFoundException();
+            FileMode mode = !File.Exists(FilePath) ? FileMode.Create : FileMode.Open;
             List<Book> books = new List<Book>();
-            using(BinaryReader reader = new BinaryReader(new FileStream(FilePath, FileMode.Open))) {
+            using(BinaryReader reader = new BinaryReader(new FileStream(FilePath, mode))) {
                 while(reader.PeekChar() > -1) {
                     string author = reader.ReadString();
                     string title = reader.ReadString();
@@ -66,7 +66,7 @@ namespace BookService.Services {
         }
 
         private void Create(IEnumerable<Book> items, FileMode mode) {
-            using (BinaryWriter writer = new BinaryWriter(new FileStream(FilePath, FileMode.Append, FileAccess.Write))) {
+            using (BinaryWriter writer = new BinaryWriter(new FileStream(FilePath, mode, FileAccess.Write))) {
                 foreach (var item in items) {
                     if (item != null)
                         WriteBook(item, writer);

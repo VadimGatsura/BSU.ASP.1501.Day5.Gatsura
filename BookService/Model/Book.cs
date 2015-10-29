@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace BookService.Model {
     public sealed class Book : IEquatable<Book>, IComparable<Book> {
@@ -51,7 +52,7 @@ namespace BookService.Model {
             return string.Equals(Author, other.Author) && string.Equals(Title, other.Title) && string.Equals(PublishOrganization, other.PublishOrganization) && PagesNumber == other.PagesNumber && Price.Equals(other.Price);
         }
 
-        public override string ToString() => $"Author: {Author}, Title: {Title}, PublishOrganization: {PublishOrganization}, PagesNumber: {PagesNumber}, Price: {Price}";
+        public override string ToString() => $"Author: {Author}, Title: {Title}\n\tPublishOrganization: {PublishOrganization}, PagesNumber: {PagesNumber}, Price: {Price.ToString("C", CultureInfo.GetCultureInfo("be-BY"))}";
 
         #endregion
     }
